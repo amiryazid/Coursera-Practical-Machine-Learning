@@ -4,7 +4,7 @@ author: "AmirYazid"
 date: "Thursday, March 17, 2016"
 ---
 ##Data preprocessing
-```{r}
+```r
 library(caret)
 library(rpart)
 library(rpart.plot)
@@ -98,7 +98,7 @@ result
 
 ###Correlation Matrix Visualization
 
-```{r}
+```r
 corrPlot <- cor(trainData[, -length(names(trainData))])
 corrplot(corrPlot, method="color")
 ```
@@ -106,7 +106,7 @@ corrplot(corrPlot, method="color")
 	
 ###Tree Visualization
 
-```{r}
+```r
 treeModel <- rpart(classe ~ ., data=trainData, method="class")
 prp(treeModel) # fast plot
 ```
