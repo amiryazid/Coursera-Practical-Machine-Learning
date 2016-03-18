@@ -23,13 +23,13 @@ dim(testRaw)
 
 ##Data Cleaning
 
-####remove NA values
+######remove NA values
 ```{r}
 trainRaw <- trainRaw[, colSums(is.na(trainRaw)) == 0] 
 testRaw <- testRaw[, colSums(is.na(testRaw)) == 0] 
 ```
 
-####get rid of some columns that do not contribute much to the accelerometer measurements
+######get rid of some columns that do not contribute much to the accelerometer measurements
 ```{r}
 classe <- trainRaw$classe
 trainRemove <- grepl("^X|timestamp|window", names(trainRaw))
@@ -41,8 +41,8 @@ testRaw <- testRaw[, !testRemove]
 testCleaned <- testRaw[, sapply(testRaw, is.numeric)]
 ```
 
-####split the cleaned training set into a pure training data set (70%) and a validation data set (30%)
-####use the validation data set to conduct cross validation in future steps
+######split the cleaned training set into a pure training data set (70%) and a validation data set (30%)
+######use the validation data set to conduct cross validation in future steps
 ```{r}
 set.seed(22519) # For reproducibile purpose
 inTrain <- createDataPartition(trainCleaned$classe, p=0.70, list=F)
@@ -52,9 +52,9 @@ testData <- trainCleaned[-inTrain, ]
 
 ##Data Modelling
 
-####Fit a predictive model for activity recognition using Random Forest algorithm 
-####because it automatically selects important variables and is robust to correlated covariates & outliers in general
-####We will use 5-fold cross validation when applying the algorithm.
+######Fit a predictive model for activity recognition using Random Forest algorithm 
+######because it automatically selects important variables and is robust to correlated covariates & outliers in general
+######We will use 5-fold cross validation when applying the algorithm.
 
 ```{r}
 controlRf <- trainControl(method="cv", 5)
@@ -62,21 +62,21 @@ modelRf <- train(classe ~ ., data=trainData, method="rf", trControl=controlRf, n
 modelRf
 ```
 
-####Then estimate the performance of the model on the validation data set
+######Then estimate the performance of the model on the validation data set
 
 ```{r}
 predictRf <- predict(modelRf, testData)
 confusionMatrix(testData$classe, predictRf)
 ```
 
-####calculate accuracy
+######calculate accuracy
 
 ```{r}
 accuracy <- postResample(predictRf, testData$classe)
 accuracy
 ```
 
-####calculate estimated out-of-sample error
+######calculate estimated out-of-sample error
 
 ```{r}
 oose <- 1 - as.numeric(confusionMatrix(testData$classe, predictRf)$overall[1])
@@ -85,8 +85,8 @@ oose
 
 ##Predicting for Test Data Set
 
-####apply the model to the original testing data set downloaded from the data source
-###remove the problem_id column first.
+######apply the model to the original testing data set downloaded from the data source
+#####remove the problem_id column first.
 
 ```{r}
 result <- predict(modelRf, testCleaned[, -length(names(testCleaned))])
